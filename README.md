@@ -2,8 +2,8 @@
 
 ## 🌿 Estructura de Ramas
 
-- `principal`: Contiene las versiones estables del proyecto y/o otros trabajos de la materia.
-- `primera-version-interfaz-y-usuarios`: Contiene el desarrollo de la interfaz de usuario y el módulo de gestión de usuarios.
+principal: Contiene las versiones estables del proyecto y/o otros trabajos de la materia.
+primera-version-interfaz-y-usuarios: Contiene el desarrollo de la interfaz de usuario y el módulo de gestión de usuarios.
 
 ---
 
