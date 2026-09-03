@@ -6,7 +6,9 @@ package co.unicauca.saberpro.users.presentation;
 import co.unicauca.saberpro.users.domain.Usuario;
 /**
  *
- * @author Jonnathan
+ * @author Martin Silva
+ *  * Britney Benitez Ordoñez
+ * Juan Manuel Garcia Diaz 
  */
 public class GUIPrincipal extends javax.swing.JFrame {
     

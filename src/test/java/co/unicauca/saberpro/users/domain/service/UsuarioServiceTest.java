@@ -1,12 +1,18 @@
 package co.unicauca.saberpro.users.domain.service;
 
-import co.unicauca.saberpro.users.domain.Usuario;
-import co.unicauca.saberpro.users.domain.access.IUsuarioRepository;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import co.unicauca.saberpro.users.domain.Usuario;
+import co.unicauca.saberpro.users.domain.access.IUsuarioRepository;
 
 public class UsuarioServiceTest {
 
@@ -40,19 +46,19 @@ public class UsuarioServiceTest {
 
     @Test
     public void testCrearUsuarioExitoso() {
-        boolean resultado = servicio.crearUsuario("jbenavidez", "Jonnathan Benavidez", "Estudiante", "Clave123*");
+        boolean resultado = servicio.crearUsuario("jbenavidez", "Jonnathan Benavidez", "Estudiante", "Clave123!");
         assertTrue(resultado, "El usuario debería crearse con una clave válida");
     }
 
     @Test
     public void testCrearUsuarioPasswordCorta() {
-        boolean resultado = servicio.crearUsuario("jbenavidez", "Jonnathan Benavidez", "Estudiante", "Ab1*");
+        boolean resultado = servicio.crearUsuario("jbenavidez", "Jonnathan Benavidez", "Estudiante", "Ab1!");
         assertFalse(resultado, "Debería rechazar claves de menos de 6 caracteres");
     }
 
     @Test
     public void testCrearUsuarioSinMayuscula() {
-        boolean resultado = servicio.crearUsuario("jbenavidez", "Jonnathan Benavidez", "Estudiante", "clave123*");
+        boolean resultado = servicio.crearUsuario("jbenavidez", "Jonnathan Benavidez", "Estudiante", "clave123!");
         assertFalse(resultado, "Debería rechazar claves sin mayúsculas");
     }
 
@@ -64,8 +70,9 @@ public class UsuarioServiceTest {
 
     @Test
     public void testAutenticarUsuarioExitoso() {
-        servicio.crearUsuario("jbenavidez", "Jonnathan Benavidez", "Estudiante", "Clave123*");
-        Usuario usuario = servicio.autenticarUsuario("jbonilla", "Clave123*");
+        servicio.crearUsuario("jbenavidez", "Jonnathan Benavidez", "Estudiante", "Clave123!");
+        // Se corrigió "jbonilla" por "jbenavidez"
+        Usuario usuario = servicio.autenticarUsuario("jbenavidez", "Clave123!");
         
         assertNotNull(usuario, "El usuario debería autenticarse correctamente");
         assertEquals("Jonnathan Benavidez", usuario.getNombreCompleto());
@@ -73,8 +80,9 @@ public class UsuarioServiceTest {
 
     @Test
     public void testAutenticarUsuarioClaveErronea() {
-        servicio.crearUsuario("jbenavidez", "Jonnathan Benavidez", "Estudiante", "Clave123*");
-        Usuario usuario = servicio.autenticarUsuario("jbonilla", "ClaveErronea123*");
+        servicio.crearUsuario("jbenavidez", "Jonnathan Benavidez", "Estudiante", "Clave123!");
+        // Se corrigió "jbonilla" por "jbenavidez"
+        Usuario usuario = servicio.autenticarUsuario("jbenavidez", "ClaveErronea123!");
         
         assertNull(usuario, "No debería permitir autenticación con clave incorrecta");
     }

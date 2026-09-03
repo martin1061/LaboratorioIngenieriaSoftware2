@@ -4,14 +4,17 @@
  */
 
 package co.unicauca.saberpro.users.presentation;
+import javax.swing.JOptionPane;
+
 import co.unicauca.saberpro.users.domain.Usuario;
 import co.unicauca.saberpro.users.domain.access.Factory;
 import co.unicauca.saberpro.users.domain.access.IUsuarioRepository;
 import co.unicauca.saberpro.users.domain.service.UsuarioService;
-import javax.swing.JOptionPane;
 /**
  *
- * @author Jonnathan
+ * @author martin silva
+ * Britney Benitez Ordoñez
+ * Juan Manuel Garcia Diaz 
  */
 
 
