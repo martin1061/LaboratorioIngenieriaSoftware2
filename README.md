@@ -66,4 +66,9 @@ Banco de Preguntas
 └── infra
     ├── Observer.java
     └── Subject.java
-clon: git clone -b laboratorio-mvc-observer https://github.com/martin1061/LaboratorioIngenieriaSoftware2.git
+## 📥 Clonar el proyecto
+
+Para obtener directamente la versión correspondiente al laboratorio de MVC y Observer, ejecutar:
+
+```bash
+git clone -b laboratorio-mvc-observer https://github.com/martin1061/LaboratorioIngenieriaSoftware2.git
