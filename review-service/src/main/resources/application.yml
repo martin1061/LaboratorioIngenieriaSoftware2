@@ -1,0 +1,21 @@
+server:
+  port: 8085
+  error:
+    include-message: always
+spring:
+  application:
+    name: review-service
+  datasource:
+    url: jdbc:h2:mem:reviewdb;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: update
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: 5672
+    username: guest
+    password: guest
+app:
+  services:
+    user-url: ${USER_URL:http://localhost:8081}
+    lifecycle-url: ${LIFECYCLE_URL:http://localhost:8084}
