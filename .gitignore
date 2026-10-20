@@ -1,0 +1,8 @@
+target/
+.mvn/
+.idea/
+.DS_Store
+*.iml
+
+hs_err_*.log
+replay_*.log
