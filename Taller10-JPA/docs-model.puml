@@ -1,0 +1,24 @@
+@startuml
+skinparam classAttributeIconSize 0
+abstract class Question { id: Long; context: String; statement: String; status: QuestionStatus }
+class MultipleChoiceQuestion
+class TrueFalseQuestion
+class AnswerOption
+class QuestionMetadata
+class User
+class Competency
+class Topic
+class Review
+class Quiz
+class QuizQuestion
+Question <|-- MultipleChoiceQuestion
+Question <|-- TrueFalseQuestion
+User "1" <-- "0..*" Question : author
+Topic "1" <-- "0..*" Question
+Question "1" *-- "1..5" AnswerOption
+Question "1" -- "1" QuestionMetadata
+Question "*" -- "*" Competency
+Question "1" -- "0..*" Review
+Quiz "1" *-- "1..*" QuizQuestion
+Question "1" <-- "0..*" QuizQuestion
+@enduml
