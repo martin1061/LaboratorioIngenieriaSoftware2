@@ -1,24 +1,173 @@
 @startuml
 skinparam classAttributeIconSize 0
-abstract class Question { id: Long; context: String; statement: String; status: QuestionStatus }
-class MultipleChoiceQuestion
-class TrueFalseQuestion
-class AnswerOption
-class QuestionMetadata
-class User
-class Competency
-class Topic
-class Review
-class Quiz
-class QuizQuestion
-Question <|-- MultipleChoiceQuestion
-Question <|-- TrueFalseQuestion
-User "1" <-- "0..*" Question : author
-Topic "1" <-- "0..*" Question
-Question "1" *-- "1..5" AnswerOption
-Question "1" -- "1" QuestionMetadata
-Question "*" -- "*" Competency
-Question "1" -- "0..*" Review
-Quiz "1" *-- "1..*" QuizQuestion
-Question "1" <-- "0..*" QuizQuestion
+skinparam packageStyle rectangle
+
+title Modelo de Dominio y Persistencia JPA - Banco de Preguntas Saber Pro
+
+package " DOMAIN (Puro - Sin @Entity)" {
+  
+  abstract class Question {
+    - Long id
+    - String context
+    - String statement
+    - String justification
+    - String bibliography
+    - Difficulty difficulty
+    - QuestionStatus status
+    - Long authorId
+    - Long topicId
+    + submitForReview()
+    + approve()
+    + publish()
+  }
+
+  class MultipleChoiceQuestion {
+    - List<String> options
+    - int correctOptionIndex
+  }
+
+  class TrueFalseQuestion {
+    - boolean expectedValue
+  }
+
+  class User {
+    - Long id
+    - String email
+    - String role
+  }
+
+  class Topic {
+    - Long id
+    - String name
+  }
+
+  class Competency {
+    - Long id
+    - String name
+  }
+
+  class AnswerOption {
+    - String text
+    - boolean correct
+  }
+
+  class QuestionMetadata {
+    - Long id
+    - String cognitiveLevel
+    - int estimatedTime
+  }
+
+  class Review {
+    - Long id
+    - Long reviewerId
+    - String comments
+    - ReviewResult result
+  }
+
+  Question <|-- MultipleChoiceQuestion : Herencia
+  Question <|-- TrueFalseQuestion : Herencia
+}
+
+package "️ INFRASTRUCTURE JPA (Con @Entity)" {
+  
+  abstract class QuestionRecord {
+    <<@Entity>>
+    <<@Inheritance(strategy=JOINED)>>
+    - @Id Long id
+    - String context
+    - String statement
+    - @ManyToOne(fetch=LAZY) UserRecord author
+    - @ManyToOne(fetch=LAZY) TopicRecord topic
+    - @OneToMany(mappedBy="question", cascade=ALL) List<AnswerOptionRecord> options
+    - @ManyToMany Set<CompetencyRecord> competencies
+    - @OneToOne(mappedBy="question") QuestionMetadataRecord metadata
+  }
+
+  class MultipleChoiceQuestionRecord {
+    <<@Entity>>
+    <<@PrimaryKeyJoinColumn>>
+  }
+
+  class AnswerOptionRecord {
+    <<@Entity>>
+    - @Id Long id
+    - String text
+    - boolean correct
+    - @ManyToOne QuestionRecord question
+  }
+
+  class UserRecord {
+    <<@Entity>>
+    - @Id Long id
+    - String email
+    - String role
+  }
+
+  class TopicRecord {
+    <<@Entity>>
+    - @Id Long id
+    - String name
+  }
+
+  class CompetencyRecord {
+    <<@Entity>>
+    - @Id Long id
+    - String name
+  }
+
+  class QuestionMetadataRecord {
+    <<@Entity>>
+    <<@OneToOne>>
+    - @Id Long id
+    - String cognitiveLevel
+    - int estimatedTime
+    - @OneToOne QuestionRecord question
+  }
+
+  QuestionRecord <|-- MultipleChoiceQuestionRecord : Herencia JOINED
+  QuestionRecord "1" *-- "1..5" AnswerOptionRecord : @OneToMany
+  QuestionRecord "*" --> "*" CompetencyRecord : @ManyToMany
+  QuestionRecord "1..*" --> "1" UserRecord : @ManyToOne
+  QuestionRecord "1..*" --> "1" TopicRecord : @ManyToOne
+  QuestionRecord "1" -- "1" QuestionMetadataRecord : @OneToOne
+}
+
+package " REPOSITORY CONTRACTS" {
+  
+  interface QuestionRepository {
+    <<interface>>
+    + save(Question): Question
+    + findById(Long): Optional<Question>
+    + findAll(): List<Question>
+    + findByStatus(QuestionStatus): List<Question>
+  }
+
+  interface UserRepository {
+    <<interface>>
+    + save(User): User
+    + findById(Long): Optional<User>
+  }
+}
+
+QuestionRepository ..> Question : "Depende (DIP)"
+UserRepository ..> User : "Depende (DIP)"
+
+note right of QuestionRecord
+  Estrategia: InheritanceType.JOINED
+  - Tabla base: questions (atributos comunes)
+  - Tabla hija: multiple_choice_questions (atributos específicos)
+end note
+
+note right of AnswerOptionRecord
+  Relación @OneToMany
+  - Clave foránea: question_id en answer_options
+  - Cascade: ALL (si borra pregunta, borra opciones)
+end note
+
+note right of CompetencyRecord
+  Relación @ManyToMany
+  - Tabla intermedia: question_competencies
+  - Claves: question_id, competency_id
+end note
+
 @enduml
